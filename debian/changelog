@@ -1,0 +1,377 @@
+python-regex (0.1.20211008-1) unstable; urgency=medium
+
+  * New upstream release
+  * debian/rules
+    - rework how we run tests to make sure to use the build module
+
+ -- Sandro Tosi <morph@debian.org>  Sat, 09 Oct 2021 22:20:57 -0400
+
+python-regex (0.1.20201113-2) unstable; urgency=medium
+
+  * Use the new Debian Python Team contact name and address
+  * remove -dbg package; Closes: #994367
+
+ -- Sandro Tosi <morph@debian.org>  Thu, 30 Sep 2021 19:24:05 -0400
+
+python-regex (0.1.20201113-1) unstable; urgency=medium
+
+  [ Ondřej Nový ]
+  * d/control: Update Vcs-* fields with new Debian Python Team Salsa
+    layout.
+
+  [ Sandro Tosi ]
+  * New upstream release
+  * debian/copyright
+    - update for new upstream code
+  * debian/control
+    - bump Standards-Version to 4.5.1 (no changes needed)
+
+ -- Sandro Tosi <morph@debian.org>  Fri, 25 Dec 2020 02:00:09 -0500
+
+python-regex (0.1.20200714-1) unstable; urgency=medium
+
+  [ Debian Janitor ]
+  * Bump debhelper from old 10 to 12.
+  * Set upstream metadata fields: Repository.
+
+  [ Antonio Terceiro ]
+  * debian/watch: find releases after 2019
+  * debian/watch: normalize upstream version to yyyymmdd
+  * New upstream version 0.1.20200714 (Closes: #969259)
+  * Add build depedency on python3-setuptools
+
+  [ Sandro Tosi ]
+  * debian/copyright
+    - extend packaging copyright years
+  * debian/rules
+    - update some documentation files that's been renamed
+
+ -- Sandro Tosi <morph@debian.org>  Mon, 14 Sep 2020 23:26:42 -0400
+
+python-regex (0.1.20190819-2) unstable; urgency=medium
+
+  * Drop python2 support; Closes: #938127
+
+ -- Sandro Tosi <morph@debian.org>  Thu, 16 Jan 2020 20:22:55 -0500
+
+python-regex (0.1.20190819-1) unstable; urgency=medium
+
+  [ Ondřej Nový ]
+  * Use debhelper-compat instead of debian/compat.
+  * Bump Standards-Version to 4.4.1.
+
+  [ Sandro Tosi ]
+  * New upstream release
+
+ -- Sandro Tosi <morph@debian.org>  Fri, 29 Nov 2019 15:28:42 -0500
+
+python-regex (0.1.20190207-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Sandro Tosi <morph@debian.org>  Sat, 16 Feb 2019 21:17:07 -0500
+
+python-regex (0.1.20190124-1) unstable; urgency=medium
+
+  * new upstream release
+  * debian/copyright
+    - extend packaging copyright years
+  * debian/control
+    - bump Standards-Version to 4.3.0 (no changes needed)
+
+ -- Sandro Tosi <morph@debian.org>  Fri, 01 Feb 2019 19:12:48 -0500
+
+python-regex (0.1.20181122-1) unstable; urgency=medium
+
+  [ Ondřej Nový ]
+  * Convert git repository from git-dpm to gbp layout
+
+  [ Sandro Tosi ]
+  * New upstream release; Closes: #903503
+  * debian/control
+    - bump Standards-Version to 4.2.1 (no changes needed)
+
+ -- Sandro Tosi <morph@debian.org>  Sat, 22 Dec 2018 18:05:00 -0500
+
+python-regex (0.1.20180609-1) unstable; urgency=medium
+
+  * New upstream release
+  * debian/rules
+    - change location of unittests
+
+ -- Sandro Tosi <morph@debian.org>  Sat, 09 Jun 2018 21:03:44 -0400
+
+python-regex (0.1.20180606-1) unstable; urgency=medium
+
+  [ Ondřej Nový ]
+  * d/control: Set Vcs-* to salsa.debian.org
+  * d/copyright: Use https protocol in Format field
+  * d/control: Remove ancient X-Python3-Version field
+
+  [ Sandro Tosi ]
+  * New upstream release
+  * debian/copyright
+    - extend packaging copyright years
+  * debian/control
+    - bump Standards-Version to 4.1.4 (no changes needed)
+
+ -- Sandro Tosi <morph@debian.org>  Fri, 08 Jun 2018 16:13:57 -0400
+
+python-regex (0.1.20171212-2) unstable; urgency=medium
+
+  * Correct errors in maintscripts to transition from a symlink to a dir for
+    packages documenation dirs; patch by Nicholas D Steeves; Closes: #886944
+  * debian/control
+    - bump Standards-Version to 4.1.3 (no changes needed)
+
+ -- Sandro Tosi <morph@debian.org>  Sat, 10 Feb 2018 20:09:47 -0500
+
+python-regex (0.1.20171212-1) unstable; urgency=medium
+
+  * New upstream release
+  * Install doc files in every binary pkgs; Closes: #884692
+  * debian/control
+    - bump Standards-Version to 4.1.2
+    - use prio: optional for -dbg packages too (new policy)
+  * debian/watch
+    - use HTTPS to connect to pypi.debian.net
+
+ -- Sandro Tosi <morph@debian.org>  Sun, 24 Dec 2017 23:33:14 -0500
+
+python-regex (0.1.20170117-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Sandro Tosi <morph@debian.org>  Mon, 23 Jan 2017 19:36:17 -0500
+
+python-regex (0.1.20161227-1) unstable; urgency=medium
+
+  * New upstream release
+  * debian/copyright
+    - extend packaging copyright years
+
+ -- Sandro Tosi <morph@debian.org>  Thu, 05 Jan 2017 14:33:22 -0500
+
+python-regex (0.1.20161121-1) unstable; urgency=medium
+
+  * New upstream release
+  * Declare compat level 10
+
+ -- Sandro Tosi <morph@debian.org>  Sat, 10 Dec 2016 18:02:40 -0500
+
+python-regex (0.1.20160922-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Sandro Tosi <morph@debian.org>  Sun, 02 Oct 2016 16:05:29 -0400
+
+python-regex (0.1.20160721-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Sandro Tosi <morph@debian.org>  Tue, 16 Aug 2016 19:39:35 +0100
+
+python-regex (0.1.20160619-1) unstable; urgency=medium
+
+  * New upstream release
+  * debian/control
+    - add pygments to b-d, needed for doc
+
+ -- Sandro Tosi <morph@debian.org>  Tue, 21 Jun 2016 20:07:29 +0100
+
+python-regex (0.1.20160614-1) unstable; urgency=medium
+
+  * New upstream release
+  * debian/rules
+    - run tests on debug flavor too
+
+ -- Sandro Tosi <morph@debian.org>  Sat, 18 Jun 2016 15:44:16 +0100
+
+python-regex (0.1.20160605-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Sandro Tosi <morph@debian.org>  Sat, 11 Jun 2016 19:22:54 +0100
+
+python-regex (0.1.20160425-1) unstable; urgency=medium
+
+  [ Sandro Tosi ]
+  * New upstream release
+  * debian/control
+    - bump Standards-Version to 3.9.8 (no changes needed)
+
+  [ Ondřej Nový ]
+  * Fixed VCS URL (https)
+
+ -- Sandro Tosi <morph@debian.org>  Mon, 25 Apr 2016 22:22:50 +0100
+
+python-regex (0.1.20160110-1) unstable; urgency=medium
+
+  * New upstream release
+  * debian/control
+    - add b-d on dh-python
+  * debian/copyright
+    - extend packaging copyright years
+
+ -- Sandro Tosi <morph@debian.org>  Thu, 28 Jan 2016 23:23:28 +0000
+
+python-regex (0.1.20150719-1) unstable; urgency=medium
+
+  * New upstream release
+  * debian/{control, copyright}
+    - update homepage URL
+
+ -- Sandro Tosi <morph@debian.org>  Mon, 03 Aug 2015 00:22:51 +0100
+
+python-regex (0.1.20150318-1) experimental; urgency=medium
+
+  * New upstream release
+  * debian/watch
+    - use PyPI redirector
+  * debian/copyright
+    - extend debian packaging years
+
+ -- Sandro Tosi <morph@debian.org>  Sat, 11 Apr 2015 02:02:42 +0100
+
+python-regex (0.1.20141024-3) unstable; urgency=medium
+
+  * debian/control
+    - add Pre-Depends to have the correct version of dpkg needed for the
+      mainscript to operate properly; thanks to Niels Thykier
+
+ -- Sandro Tosi <morph@debian.org>  Sat, 22 Nov 2014 10:47:58 +0000
+
+python-regex (0.1.20141024-2) unstable; urgency=medium
+
+  * debian/*.maintscript
+    - properly handle the doc directories switch to symlinks; thanks to Andreas
+      Beckmann for the report; Closes: #768238
+
+ -- Sandro Tosi <morph@debian.org>  Fri, 21 Nov 2014 23:53:10 +0000
+
+python-regex (0.1.20141024-1) unstable; urgency=medium
+
+  * New upstream release
+  * debian/control
+    - bump Standards-Version to 3.9.6 (no changes needed)
+  * debian/copyright
+    - fix short license name
+    - use the right URL for DEP-5 format reference
+
+ -- Sandro Tosi <morph@debian.org>  Sun, 26 Oct 2014 10:00:58 +0000
+
+python-regex (0.1.20140216-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Sandro Tosi <morph@debian.org>  Mon, 17 Feb 2014 00:01:02 +0100
+
+python-regex (0.1.20140130-1) unstable; urgency=medium
+
+  * New upstream release
+    - fix a FTBFS on s390x; thanks to Aurelien Jarno for the report;
+      Closes: #739122
+  * debian/rules
+    - let all the doc dirs be links to python-regex one
+
+ -- Sandro Tosi <morph@debian.org>  Sun, 16 Feb 2014 22:28:07 +0100
+
+python-regex (0.1.20140120-1) unstable; urgency=medium
+
+  * New upstream release
+  * debian/watch
+    - adapted to new upstream versioning
+  * debian/copyright
+    - extend packaging copyright years
+  * debian/control
+    - bump Standards-Version to 3.9.5 (no changes needed)
+    - switch me to Maintainer (team to Uploaders)
+  * Switch to db_python2
+
+ -- Sandro Tosi <morph@debian.org>  Sun, 26 Jan 2014 21:10:28 +0100
+
+python-regex (0.1.20130605-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Sandro Tosi <morph@debian.org>  Tue, 11 Jun 2013 22:29:26 +0200
+
+python-regex (0.1.20130521-2) unstable; urgency=low
+
+  * Upload to unstable
+
+ -- Sandro Tosi <morph@debian.org>  Wed, 05 Jun 2013 00:00:04 +0200
+
+python-regex (0.1.20130521-1) experimental; urgency=low
+
+  [ Jakub Wilk ]
+  * Use canonical URIs for Vcs-* fields.
+
+  [ Sandro Tosi ]
+  * New upstream release
+  * debian/{docs, rules}
+    - install and build documentation from new location
+  * debian/control
+    - build for all supported Python 3.x versions; thanks to Jakub Wilk for the
+      report; Closes: #696111
+    - use python3:Depends to build Python 3.x dependencies; thanks to Jakub Wilk
+      for the report; Closes: #695994
+    - adjust -dbg package dependencies; thanks to Scott Kitterman for the patch
+  * debian/rules
+    - ignore errors when running tests for Python 3.x, there's a bug to be fixed
+      upstream
+
+ -- Sandro Tosi <morph@debian.org>  Tue, 04 Jun 2013 22:47:10 +0200
+
+python-regex (0.1.20120904-1) experimental; urgency=low
+
+  * New upstream release
+
+ -- Sandro Tosi <morph@debian.org>  Sat, 08 Sep 2012 16:00:10 +0200
+
+python-regex (0.1.20120825-1) experimental; urgency=low
+
+  * New upstream release
+
+ -- Sandro Tosi <morph@debian.org>  Thu, 30 Aug 2012 11:55:26 +0200
+
+python-regex (0.1.20120803-1) experimental; urgency=low
+
+  * New upstream release
+
+ -- Sandro Tosi <morph@debian.org>  Sat, 11 Aug 2012 14:41:47 +0200
+
+python-regex (0.1.20120613-1) unstable; urgency=low
+
+  * New upstream release
+  * debian/patches/
+    - removed, patches are not needed anymore
+
+ -- Sandro Tosi <morph@debian.org>  Thu, 14 Jun 2012 18:00:24 +0200
+
+python-regex (0.1.20120506-2) unstable; urgency=low
+
+  * debian/control
+    - generate manually depends on python3* for py3k packages (dh_python3 is
+      broken: #675703); thanks to Jakub Wilk for the report; Closes: #674224
+
+ -- Sandro Tosi <morph@debian.org>  Mon, 04 Jun 2012 21:46:16 +0200
+
+python-regex (0.1.20120506-1) unstable; urgency=low
+
+  * New upstream release
+  * debian/control
+    - set DPMT as maintainer
+    - set Vcs-{Browser, Svn} fields
+  * debian/patches/10_fix_unicodedata_copy
+    - updated to new upstream code
+  * debian/copyright
+    - reorganized following DEP-5 requirements
+
+ -- Sandro Tosi <morph@debian.org>  Wed, 16 May 2012 22:40:26 +0200
+
+python-regex (0.1.20120323-1) unstable; urgency=low
+
+  * Initial release; Closes: #666790
+
+ -- Sandro Tosi <morph@debian.org>  Tue, 03 Apr 2012 20:31:05 +0200

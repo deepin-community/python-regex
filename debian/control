@@ -1,0 +1,31 @@
+Source: python-regex
+Section: python
+Priority: optional
+Maintainer: Sandro Tosi <morph@debian.org>
+Uploaders: Debian Python Team <team+python@tracker.debian.org>,
+Build-Depends: debhelper-compat (= 12),
+               dh-python,
+               python3-all-dev,
+               python3-docutils,
+               python3-pygments,
+               python3-setuptools,
+Standards-Version: 4.5.1
+X-Python-Version: all
+Homepage: https://bitbucket.org/mrabarnett/mrab-regex
+Vcs-Git: https://salsa.debian.org/python-team/packages/python-regex.git
+Vcs-Browser: https://salsa.debian.org/python-team/packages/python-regex
+
+Package: python3-regex
+Architecture: any
+Pre-Depends: ${misc:Pre-Depends},
+Depends: ${misc:Depends},
+         ${python3:Depends},
+         ${shlibs:Depends},
+Description: alternative regular expression module (Python 3)
+ This new regex implementation is intended eventually to replace Python's
+ current re module implementation.
+ .
+ For testing and comparison with the current 're' module the new implementation
+ is in the form of a module called 'regex'.
+ .
+ This is the Python 3 version of the package.
