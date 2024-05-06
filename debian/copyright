@@ -1,13 +1,13 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: regex
-Source: https://bitbucket.org/mrabarnett/mrab-regex
+Source: https://github.com/mrabarnett/mrab-regex
 
 Files: *
 Copyright: 2020 Matthew Barnett <regex@mrabarnett.plus.com>
 License: Apache-2.0
 
 Files: debian/*
-Copyright: 2012-2020 Sandro Tosi <morph@debian.org>
+Copyright: 2012-2022 Sandro Tosi <morph@debian.org>
 License: Apache-2.0
 
 License: Apache-2.0

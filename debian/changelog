@@ -1,3 +1,41 @@
+python-regex (0.1.20221031-2) unstable; urgency=medium
+
+  [ Debian Janitor ]
+  * Remove an obsolete maintscript entry.
+  * Set upstream metadata fields: Bug-Database, Bug-Submit, Repository-Browse.
+
+  [ Sandro Tosi ]
+  * orphan
+
+ -- Sandro Tosi <morph@debian.org>  Sat, 02 Mar 2024 00:25:47 -0500
+
+python-regex (0.1.20221031-1) unstable; urgency=medium
+
+  * New upstream release
+  * debian/rules
+    - dont install docs/Features.rst, removed upstream
+  * debian/copyright
+    - extend packaging copyright years
+  * debian/control
+    - bump Standards-Version to 4.6.2.0 (no changes needed)
+
+ -- Sandro Tosi <morph@debian.org>  Fri, 30 Dec 2022 02:04:26 -0500
+
+python-regex (0.1.20211110-1) unstable; urgency=medium
+
+  * New upstream release
+  * update upstream location to the new github repo
+  * debian/copyright
+    - extend packaging copyright years
+  * debian/control
+    - bump Standards-Version to 4.6.0.1 (no changes needed)
+    - bump debhelper-compat to 13 (no changes needed)
+  * debian/rules
+    - properly clean test_regex.py during tests, so it doesnt get installed as
+      a top-level module
+
+ -- Sandro Tosi <morph@debian.org>  Thu, 09 Dec 2021 01:00:53 -0500
+
 python-regex (0.1.20211008-1) unstable; urgency=medium
 
   * New upstream release
