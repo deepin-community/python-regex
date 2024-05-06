@@ -1532,7 +1532,7 @@ Py_LOCAL_INLINE(BOOL) IS_MIDNUMLETQ(RE_UINT32 v) {
 /* Checks whether a position is on a default word boundary.
  *
  * The rules are defined here:
- * http://www.unicode.org/reports/tr29/#Default_Word_Boundaries
+ * https://www.unicode.org/reports/tr29/#Default_Word_Boundaries
  */
 static BOOL unicode_at_default_boundary(RE_State* state, Py_ssize_t text_pos) {
     Py_UCS4 (*char_at)(void* text, Py_ssize_t pos);
@@ -1787,7 +1787,7 @@ static BOOL unicode_at_default_word_end(RE_State* state, Py_ssize_t text_pos) {
 /* Checks whether a position is on a grapheme boundary.
  *
  * The rules are defined here:
- * http://www.unicode.org/reports/tr29/#Grapheme_Cluster_Boundaries
+ * https://www.unicode.org/reports/tr29/#Grapheme_Cluster_Boundaries
  */
 static BOOL unicode_at_grapheme_boundary(RE_State* state, Py_ssize_t text_pos)
   {
@@ -9655,7 +9655,7 @@ Py_LOCAL_INLINE(int) check_fuzzy_partial(RE_State* state, Py_ssize_t text_pos)
     return RE_ERROR_FAILURE;
 }
 
-/* Records a change in a fuzzy change. */
+/* Records a fuzzy change. */
 Py_LOCAL_INLINE(BOOL) record_fuzzy(RE_State* state, RE_UINT8 fuzzy_type,
   Py_ssize_t text_pos) {
     RE_FuzzyChangesList* change_list;
@@ -10281,7 +10281,7 @@ Py_LOCAL_INLINE(int) retry_fuzzy_insert(RE_State* state, RE_Node** node) {
 
     if (state->text_pos == limit || !insertion_permitted(state,
       state->fuzzy_node, state->fuzzy_counts) || !fuzzy_ext_match(state,
-      curr_node->nonstring.next_2.node, state->text_pos)) {
+      state->fuzzy_node, state->text_pos)) {
         while (count > 0) {
             unrecord_fuzzy(state);
             --state->fuzzy_counts[RE_FUZZY_INS];
@@ -12273,7 +12273,7 @@ advance:
                  */
 
                 /* Go to the 'false' branch. */
-                node = node->nonstring.next_2.node;
+                node = conditional->nonstring.next_2.node;
             }
             break;
         }
@@ -15341,9 +15341,9 @@ backtrack:
              * bstack: -
              */
 
-            if (insertion_permitted(state, inner_node, inner_counts) && 
-              total_errors(state->fuzzy_counts) + total_errors(inner_counts) < 
-              state->max_errors && fuzzy_ext_match(state, inner_node, 
+            if (insertion_permitted(state, inner_node, inner_counts) &&
+              total_errors(state->fuzzy_counts) + total_errors(inner_counts) <
+              state->max_errors && fuzzy_ext_match(state, inner_node,
               state->text_pos)) {
                 RE_INT8 step;
                 Py_ssize_t limit;
@@ -15410,6 +15410,10 @@ backtrack:
              */
 
             inner_counts[RE_FUZZY_INS] -= insertions;
+            while (insertions > 0) {
+                unrecord_fuzzy(state);
+                --insertions;
+            }
 
             /* Restore the inner fuzzy info. */
             Py_MEMCPY(state->fuzzy_counts, inner_counts,
@@ -18538,7 +18542,6 @@ static void match_dealloc(PyObject* self_) {
     PyObject_DEL(self);
 }
 
-#if PY_VERSION_HEX >= 0x03040000
 /* Ensures that the string is the immutable Unicode string or bytestring.
  * DECREFs the original string if a copy is returned.
  */
@@ -18558,7 +18561,6 @@ Py_LOCAL_INLINE(PyObject*) ensure_immutable(PyObject* string) {
     return new_string;
 }
 
-#endif
 /* Restricts a value to a range. */
 Py_LOCAL_INLINE(Py_ssize_t) limited_range(Py_ssize_t value, Py_ssize_t lower,
   Py_ssize_t upper) {
@@ -18609,11 +18611,7 @@ Py_LOCAL_INLINE(PyObject*) get_slice(PyObject* string, Py_ssize_t start,
     if (PyBytes_Check(string))
         return bytes_slice(string, start, end);
 
-#if PY_VERSION_HEX >= 0x03040000
     return ensure_immutable(PySequence_GetSlice(string, start, end));
-#else
-    return PySequence_GetSlice(string, start, end);
-#endif
 }
 
 /* Gets a MatchObject's group by integer index. */
@@ -19148,9 +19146,77 @@ static PyObject* match_spans(MatchObject* self, PyObject* args) {
     return get_from_match(self, args, match_get_spans_by_index);
 }
 
+/* MatchObject's 'allspans' method. */
+static PyObject* match_allspans(MatchObject* self) {
+    PyObject* list;
+    size_t i;
+    PyObject* result;
+
+    list = PyList_New(0);
+    if (!list)
+        return NULL;
+
+    /* Include all the groups, including group 0 (the whole match). */
+    for (i = 0; i <= self->group_count; i++) {
+        PyObject* span;
+        int status;
+
+        span = match_get_spans_by_index(self, i);
+        if (!span)
+            goto error;
+
+        status = PyList_Append(list, span);
+        Py_DECREF(span);
+        if (status < 0)
+            goto error;
+    }
+
+    result = PyList_AsTuple(list);
+    Py_DECREF(list);
+    return result;
+
+error:
+    Py_DECREF(list);
+    return NULL;
+}
+
 /* MatchObject's 'captures' method. */
 static PyObject* match_captures(MatchObject* self, PyObject* args) {
     return get_from_match(self, args, match_get_captures_by_index);
+}
+
+/* MatchObject's 'allcaptures' method. */
+static PyObject* match_allcaptures(MatchObject* self) {
+    PyObject* list;
+    size_t i;
+    PyObject* result;
+
+    list = PyList_New(0);
+    if (!list)
+        return NULL;
+
+    /* Include all the groups, including group 0 (the whole match). */
+    for (i = 0; i <= self->group_count; i++) {
+        PyObject* span;
+        int status;
+
+        span = match_get_captures_by_index(self, i);
+        if (!span)
+            goto error;
+
+        status = PyList_Append(list, span);
+        Py_DECREF(span);
+        if (status < 0)
+            goto error;
+    }
+
+    result = PyList_AsTuple(list);
+    Py_DECREF(list);
+    return result;
+
+error:
+    Py_DECREF(list);
+    return NULL;
 }
 
 /* MatchObject's 'groups' method. */
@@ -19332,7 +19398,6 @@ Py_LOCAL_INLINE(PyObject*) get_match_replacement(MatchObject* self, PyObject*
 
     if (PyUnicode_Check(item) || PyBytes_Check(item)) {
         /* It's a literal, which can be added directly to the list. */
-#if PY_VERSION_HEX >= 0x03040000
 
         /* ensure_immutable will DECREF the original item if it has to make an
          * immutable copy, but that original item might have a borrowed
@@ -19341,9 +19406,6 @@ Py_LOCAL_INLINE(PyObject*) get_match_replacement(MatchObject* self, PyObject*
          */
         Py_INCREF(item);
         item = ensure_immutable(item);
-#else
-        Py_INCREF(item);
-#endif
         return item;
     }
 
@@ -19396,11 +19458,7 @@ Py_LOCAL_INLINE(int) add_to_join_list(RE_JoinInfo* join_info, PyObject* item) {
     int status;
 
     if (join_info->is_unicode) {
-#if PY_VERSION_HEX >= 0x03040000
         if (PyUnicode_CheckExact(item)) {
-#else
-        if (PyUnicode_Check(item)) {
-#endif
             new_item = item;
             Py_INCREF(new_item);
         } else {
@@ -19411,11 +19469,7 @@ Py_LOCAL_INLINE(int) add_to_join_list(RE_JoinInfo* join_info, PyObject* item) {
             }
         }
     } else {
-#if PY_VERSION_HEX >= 0x03040000
         if (PyBytes_CheckExact(item)) {
-#else
-        if (PyBytes_Check(item)) {
-#endif
             new_item = item;
             Py_INCREF(new_item);
         } else {
@@ -19984,6 +20038,10 @@ PyDoc_STRVAR(match_captures_doc,
     there are no arguments, the captures of the whole match is returned.  Group\n\
     0 is the whole match.");
 
+PyDoc_STRVAR(match_allcaptures_doc,
+    "allcaptures() --> list of strings or tuple of list of strings.\n\
+    Return the captures of all the groups of the match and the whole match.");
+
 PyDoc_STRVAR(match_starts_doc,
     "starts([group1, ...]) --> list of ints or tuple of list of ints.\n\
     Return the indices of the starts of the captures of one or more subgroups of\n\
@@ -20009,6 +20067,11 @@ PyDoc_STRVAR(match_spans_doc,
     arguments, the spans of the captures of the whole match is returned.  Group\n\
     0 is the whole match.");
 
+PyDoc_STRVAR(match_allspans_doc,
+    "allspans() --> list of 2-tuple of ints or tuple of list of 2-tuple of ints.\n\
+    Return the spans (a 2-tuple of the indices of the start and end) of all the\n\
+    captures of all the groups of the match and the whole match.");
+
 PyDoc_STRVAR(match_detach_string_doc,
     "detach_string()\n\
     Detaches the target string from the match object. The 'string' attribute\n\
@@ -20030,9 +20093,12 @@ static PyMethodDef match_methods[] = {
     {"expandf", (PyCFunction)match_expandf, METH_O, match_expandf_doc},
     {"captures", (PyCFunction)match_captures, METH_VARARGS,
       match_captures_doc},
+    {"allcaptures", (PyCFunction)match_allcaptures, METH_NOARGS,
+      match_allcaptures_doc},
     {"starts", (PyCFunction)match_starts, METH_VARARGS, match_starts_doc},
     {"ends", (PyCFunction)match_ends, METH_VARARGS, match_ends_doc},
     {"spans", (PyCFunction)match_spans, METH_VARARGS, match_spans_doc},
+    {"allspans", (PyCFunction)match_allspans, METH_NOARGS, match_allspans_doc},
     {"detach_string", (PyCFunction)match_detach_string, METH_NOARGS,
       match_detach_string_doc},
     {"__copy__", (PyCFunction)match_copy, METH_NOARGS},
@@ -21153,11 +21219,17 @@ static void capture_dealloc(PyObject* self_) {
 static PyObject* capture_str(PyObject* self_) {
     CaptureObject* self;
     MatchObject* match;
+    PyObject* default_value;
+    PyObject* result;
 
     self = (CaptureObject*)self_;
     match = *self->match_indirect;
 
-    return match_get_group_by_index(match, self->group_index, Py_None);
+    default_value = PySequence_GetSlice(match->string, 0, 0);
+    result = match_get_group_by_index(match, self->group_index, default_value);
+    Py_DECREF(default_value);
+
+    return result;
 }
 
 static PyMemberDef splitter_members[] = {
@@ -21379,7 +21451,6 @@ Py_LOCAL_INLINE(PyObject*) get_sub_replacement(PyObject* item, PyObject*
 
     if (PyUnicode_CheckExact(item) || PyBytes_CheckExact(item)) {
         /* It's a literal, which can be added directly to the list. */
-#if PY_VERSION_HEX >= 0x03040000
 
         /* ensure_immutable will DECREF the original item if it has to make an
          * immutable copy, but that original item might have a borrowed
@@ -21388,9 +21459,6 @@ Py_LOCAL_INLINE(PyObject*) get_sub_replacement(PyObject* item, PyObject*
          */
         Py_INCREF(item);
         item = ensure_immutable(item);
-#else
-        Py_INCREF(item);
-#endif
         return item;
     }
 
@@ -21733,7 +21801,9 @@ Py_LOCAL_INLINE(PyObject*) pattern_subx(PatternObject* self, PyObject*
                 goto error;
 
             /* Add the result to the list. */
-            status = add_to_join_list(&join_info, item);
+            if (item != Py_None)
+                status = add_to_join_list(&join_info, item);
+
             Py_DECREF(item);
             if (status < 0)
                 goto error;
@@ -24770,171 +24840,6 @@ Py_LOCAL_INLINE(int) build_REF_GROUP(RE_CompileArgs* args) {
     args->end = node;
 
     return RE_ERROR_SUCCESS;
-}
-
-Py_LOCAL_INLINE(BOOL) section_contains_repeat(RE_CODE** code, RE_CODE*
-  end_code);
-
-/* Checks whether a subsection of code contains a repeat. */
-Py_LOCAL_INLINE(BOOL) subsection_contains_repeat(int initial, RE_CODE** code,
-  RE_CODE* end_code) {
-    /* codes: code*initial, ..., (next, ..., )* end. */
-    *code += initial;
-
-    if (*code >= end_code)
-        return FALSE;
-
-    if (section_contains_repeat(code, end_code))
-        return TRUE;
-
-    while (*code < end_code && **code == RE_OP_NEXT) {
-        ++(*code);
-
-        if (*code >= end_code)
-            return FALSE;
-
-        if (section_contains_repeat(code, end_code))
-            return TRUE;
-    }
-
-    if (*code >= end_code)
-        return FALSE;
-
-    ++(*code);
-
-    return FALSE;
-}
-
-/* Checks whether a section of code contains a repeat. */
-Py_LOCAL_INLINE(BOOL) section_contains_repeat(RE_CODE** code, RE_CODE*
-  end_code) {
-    while (*code < end_code) {
-        /* The following code groups opcodes by format, not function. */
-        switch ((*code)[0]) {
-        case RE_OP_ANY:
-        case RE_OP_ANY_ALL:
-        case RE_OP_ANY_ALL_REV:
-        case RE_OP_ANY_REV:
-        case RE_OP_ANY_U:
-        case RE_OP_ANY_U_REV:
-        case RE_OP_FAILURE:
-        case RE_OP_PRUNE:
-        case RE_OP_SUCCESS:
-            /* codes: opcode. */
-            ++(*code);
-            break;
-        case RE_OP_ATOMIC:
-        case RE_OP_BRANCH:
-        case RE_OP_GROUP_EXISTS:
-            /* codes: opcode, ..., (next, ..., )* end. */
-            if (subsection_contains_repeat(1, code, end_code))
-                return TRUE;
-            break;
-        case RE_OP_BOUNDARY:
-        case RE_OP_CALL_REF:
-        case RE_OP_DEFAULT_BOUNDARY:
-        case RE_OP_DEFAULT_END_OF_WORD:
-        case RE_OP_DEFAULT_START_OF_WORD:
-        case RE_OP_END_OF_LINE:
-        case RE_OP_END_OF_LINE_U:
-        case RE_OP_END_OF_STRING:
-        case RE_OP_END_OF_STRING_LINE:
-        case RE_OP_END_OF_STRING_LINE_U:
-        case RE_OP_END_OF_WORD:
-        case RE_OP_GRAPHEME_BOUNDARY:
-        case RE_OP_GROUP_CALL:
-        case RE_OP_KEEP:
-        case RE_OP_SEARCH_ANCHOR:
-        case RE_OP_SKIP:
-        case RE_OP_START_OF_LINE:
-        case RE_OP_START_OF_LINE_U:
-        case RE_OP_START_OF_STRING:
-        case RE_OP_START_OF_WORD:
-            /* codes: opcode, value. */
-            *code += 2;
-            break;
-        case RE_OP_CHARACTER:
-        case RE_OP_CHARACTER_IGN:
-        case RE_OP_CHARACTER_IGN_REV:
-        case RE_OP_CHARACTER_REV:
-        case RE_OP_PROPERTY:
-        case RE_OP_PROPERTY_IGN:
-        case RE_OP_PROPERTY_IGN_REV:
-        case RE_OP_PROPERTY_REV:
-        case RE_OP_REF_GROUP:
-        case RE_OP_REF_GROUP_FLD:
-        case RE_OP_REF_GROUP_FLD_REV:
-        case RE_OP_REF_GROUP_IGN:
-        case RE_OP_REF_GROUP_IGN_REV:
-        case RE_OP_REF_GROUP_REV:
-            /* codes: opcode, value, value. */
-            *code += 3;
-            break;
-        case RE_OP_CONDITIONAL:
-        case RE_OP_FUZZY:
-        case RE_OP_LOOKAROUND:
-            /* codes: opcode, value, value, ..., (next, ..., )* end. */
-            if (subsection_contains_repeat(3, code, end_code))
-                return TRUE;
-            break;
-        case RE_OP_GREEDY_REPEAT:
-        case RE_OP_LAZY_REPEAT:
-            return TRUE;
-        case RE_OP_GROUP:
-            /* codes: opcode, value, value, value, ..., (next, ..., )* end. */
-            if (subsection_contains_repeat(4, code, end_code))
-                return TRUE;
-            break;
-        case RE_OP_RANGE:
-        case RE_OP_RANGE_IGN:
-        case RE_OP_RANGE_IGN_REV:
-        case RE_OP_RANGE_REV:
-            /* codes: opcode, value, value, value. */
-            *code += 4;
-            break;
-        case RE_OP_SET_DIFF:
-        case RE_OP_SET_DIFF_IGN:
-        case RE_OP_SET_DIFF_IGN_REV:
-        case RE_OP_SET_DIFF_REV:
-        case RE_OP_SET_INTER:
-        case RE_OP_SET_INTER_IGN:
-        case RE_OP_SET_INTER_IGN_REV:
-        case RE_OP_SET_INTER_REV:
-        case RE_OP_SET_SYM_DIFF:
-        case RE_OP_SET_SYM_DIFF_IGN:
-        case RE_OP_SET_SYM_DIFF_IGN_REV:
-        case RE_OP_SET_SYM_DIFF_REV:
-        case RE_OP_SET_UNION:
-        case RE_OP_SET_UNION_IGN:
-        case RE_OP_SET_UNION_IGN_REV:
-        case RE_OP_SET_UNION_REV:
-            /* codes: opcode, value, ..., (next, ..., )* end. */
-            if (subsection_contains_repeat(2, code, end_code))
-                return TRUE;
-            break;
-        case RE_OP_STRING:
-        case RE_OP_STRING_FLD:
-        case RE_OP_STRING_FLD_REV:
-        case RE_OP_STRING_IGN:
-        case RE_OP_STRING_IGN_REV:
-        case RE_OP_STRING_REV:
-            /* codes: opcode, value, length, .... */
-            *code += 3 + (*code)[2];
-            break;
-        default:
-            /* We've found an opcode which we don't recognise. We'll leave it
-             * for the caller.
-             */
-            return FALSE;
-        }
-    }
-
-    return FALSE;
-}
-
-/* Checks whether a section of code contains a repeat. */
-Py_LOCAL_INLINE(BOOL) contains_repeat(RE_CODE* code, RE_CODE* end_code) {
-    return section_contains_repeat(&code, end_code);
 }
 
 /* Builds a REPEAT node. */

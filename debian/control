@@ -1,17 +1,16 @@
 Source: python-regex
 Section: python
 Priority: optional
-Maintainer: Sandro Tosi <morph@debian.org>
-Uploaders: Debian Python Team <team+python@tracker.debian.org>,
-Build-Depends: debhelper-compat (= 12),
+Maintainer: Debian Python Team <team+python@tracker.debian.org>,
+Build-Depends: debhelper-compat (= 13),
                dh-python,
                python3-all-dev,
                python3-docutils,
                python3-pygments,
                python3-setuptools,
-Standards-Version: 4.5.1
+Standards-Version: 4.6.2.0
 X-Python-Version: all
-Homepage: https://bitbucket.org/mrabarnett/mrab-regex
+Homepage: https://github.com/mrabarnett/mrab-regex
 Vcs-Git: https://salsa.debian.org/python-team/packages/python-regex.git
 Vcs-Browser: https://salsa.debian.org/python-team/packages/python-regex
 

@@ -1,23 +1,19 @@
 #!/usr/bin/env python
 from setuptools import setup, Extension
 from os.path import join
-import sys
-
-MAJOR, MINOR = sys.version_info[:2]
-
-SRC_BASE = 'regex_%i' % MAJOR
 
 with open('README.rst') as file:
     long_description = file.read()
 
 setup(
     name='regex',
-    version='2021.10.8',
+    version='2022.10.31',
     description='Alternative regular expression module, to replace re.',
     long_description=long_description,
+    long_description_content_type='text/x-rst',
     author='Matthew Barnett',
     author_email='regex@mrabarnett.plus.com',
-    url='https://bitbucket.org/mrabarnett/mrab-regex',
+    url='https://github.com/mrabarnett/mrab-regex',
     license='Apache Software License',
 
     classifiers=[
@@ -30,15 +26,17 @@ setup(
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
         'Topic :: Scientific/Engineering :: Information Analysis',
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Topic :: Text Processing',
         'Topic :: Text Processing :: General',
     ],
+    python_requires='>=3.6',
 
-    package_dir={'regex': SRC_BASE},
+    package_dir={'regex': 'regex_3'},
     py_modules=['regex.__init__', 'regex.regex', 'regex._regex_core',
      'regex.test_regex'],
-    ext_modules=[Extension('regex._regex', [join(SRC_BASE, '_regex.c'),
-      join(SRC_BASE, '_regex_unicode.c')])],
+    ext_modules=[Extension('regex._regex', [join('regex_3', '_regex.c'),
+      join('regex_3', '_regex_unicode.c')])],
 )

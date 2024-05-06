@@ -19,7 +19,6 @@ override_dh_auto_build:
 	for python in $(PYTHON3); do \
 		$$python setup.py build ; \
 	done
-	rst2html docs/Features.rst > Features.html
 
 ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
 override_dh_auto_test:
@@ -29,6 +28,7 @@ override_dh_auto_test:
 		cp regex_3/test_regex.py $$LIB ; \
 		cd $$LIB ; \
 		PYTHONPATH=. $$python test_regex.py; \
+		rm test_regex.py ; \
 		cd - ; \
 	done
 endif
@@ -40,4 +40,4 @@ override_dh_install:
 	done
 
 override_dh_installdocs:
-	dh_installdocs -A README.rst docs/UnicodeProperties.rst docs/Features.rst Features.html
+	dh_installdocs -A README.rst docs/UnicodeProperties.rst docs/Features.html
